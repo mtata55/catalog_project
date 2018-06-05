@@ -1,0 +1,80 @@
+body{
+    background-color: ghostwhite;
+}
+
+.bg-light {
+    background-color: #02b3e4 !important;
+}
+
+
+#navbarSupportedContent {
+    flex-flow: row-reverse;
+}
+
+
+.header {
+    text-align: right;
+}
+
+
+#top {
+    display: -ms-flexbox;
+    display: flex;
+    justify-content: space-around;
+}
+
+
+#title-block {
+    font-size: 1em;
+    margin-top: 30px;
+    margin-bottom: 0px;
+}
+
+
+#footer {
+    text-align: center;
+    position: absolute;
+}
+
+
+.article {
+    text-align: center;
+}
+
+
+.nav-item {
+    text-align: right;
+}
+
+
+.card {
+    margin-bottom: 25px;
+    width: 18rem;
+}
+
+
+.container {
+    max-width: 100%;
+}
+
+
+#columns {
+    margin-left: 10px;
+    margin-right: 10px;
+
+}
+
+.content{
+    margin-left: 20px;
+    margin-top: 20px;
+    margin-right: 20px;
+    margin-bottom: 20px;
+}
+
+.product{
+    width: 40rem;
+}
+
+.form-control{
+    width:61%;
+}

@@ -1,0 +1,22 @@
+{% extends "index.html" %}
+{% block content %}
+
+<div class="container">
+    <div class="row" id="columns">
+        <div class="card product">
+        <div class="card-body">
+        <h5 class="card-title">Product Detail</h5>
+        <p class="card-text">
+            dummy text dummy text dummy text dummy text dummy text dummy text dummy text
+            dummy text dummy text dummy text dummy text dummy text dummy text dummy text
+            dummy text dummy text dummy text dummy text dummy text dummy text dummy text
+            dummy text dummy text dummy text dummy text dummy text dummy text dummy text
+        <a href="{{url_for('editItem')}}">Edit</a>
+        <a href="{{url_for('deleteItem')}}">Delete</a>
+        </p>
+        </div>
+        </div>
+</div>
+</div>
+
+{% endblock %}

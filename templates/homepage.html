@@ -1,0 +1,40 @@
+{% extends "index.html" %}
+{% block content %}
+  <!-- COLUMNS -->
+
+<div class="container">
+    <div class="row" id="columns">
+
+        <div class="card">
+        <div class="card-body">
+        <h5 class="card-title">Categories</h5>
+        <p class="card-text">
+        	<a href="{{url_for('viewCategory')}}">Category link</a> <br>
+        	Category dummy text <br>
+        	Category dummy text <br>
+        	Category dummy text <br>
+        	Category dummy text <br>
+        	Category dummy text <br>
+
+        </p>
+        </div>
+        </div>
+
+        <div class="card">
+        <div class="card-body">
+        <h5 class="card-title">Latest Items</h5>
+        <p class="card-text">
+        	<a href="{{url_for('addItem')}}">Add a new item</a><br>
+        	Product Dummy Text <br>
+        	Product dummy text <br>
+        	Product dummy text <br>
+        	Product dummy text <br>
+        	Product dummy text <br>
+        	Product dummy text <br>
+        	Product dummy text <br>
+        </p>
+        </div>
+        </div>
+</div>
+</div>
+{% endblock %}

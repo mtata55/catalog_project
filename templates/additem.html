@@ -1,0 +1,35 @@
+{% extends "index.html" %}
+{% block content %}
+
+<div class="container">
+    <div class="row" id="columns">
+
+        <div class="card product">
+        <div class="card-body">
+        <h5 class="card-title">Add Item</h5>
+        <p class="card-text">
+            <form class=form-control>
+                Title: <br>
+                <input type=text  name='item_name'> <br>
+                Description: <br>
+                <textarea rows=5  name='description'> </textarea> <br>
+                Category: <br>
+                  <select class="form-control" id="category">
+                    <option>1</option>
+                    <option>2</option>
+                    <option>3</option>
+                    <option>4</option>
+                  </select>
+                  <br>
+
+                <input type=submit value='Add Product'> <br>
+
+
+            </form>
+        </p>
+        </div>
+        </div>
+</div>
+</div>
+
+{% endblock %}
