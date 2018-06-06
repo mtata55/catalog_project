@@ -40,10 +40,20 @@
 
 
 <div class="content">
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+{% for message in messages %}
+  {{message}}
+{% endfor %}
+{% endif %}
+{% endwith %}
+</div>
+
+<div class="content">
 {% block content %}
 
 {% endblock %}
-
+</div>
 
 <!-- FOOTER -->
 <footer class="footer">

@@ -53,13 +53,29 @@ def addItem():
 				category_id=category_id)
 			session.add(new_item)
 			session.commit()
+			flash("Item Added!")
 			return redirect(url_for('homepage'))
 	else:
 		return render_template("additem.html",category_list = category_list )
 
-@app.route('/category/item/edit')
-def editItem():
-	return render_template("edititem.html")
+@app.route('/category/item/<int:item_id>/edit', methods=['GET','POST'])
+def editItem(item_id):
+	session = DBSession()
+	category_list = session.query(Category).all()
+	edited_item = session.query(Item).filter_by(id=item_id).one()
+	if request.method == 'POST':
+		item_category = request.form['item_category']
+		category_id = session.query(Category.id).filter_by(name=item_category).one()[0]
+		if request.form['item_name']:
+			edited_item.name = request.form['item_name']
+			edited_item.description = request.form['item_description']
+			edited_item.category_id = category_id
+			session.add(edited_item)
+			session.commit()
+			flash("Item Edited!")
+			return redirect(url_for('homepage'))
+	else:
+		return render_template("edititem.html", edited_item=edited_item, category_list=category_list)
 
 @app.route('/deleteitem/<int:item_id>', methods=['GET', 'POST'])
 def deleteItem(item_id):
@@ -70,6 +86,7 @@ def deleteItem(item_id):
 		deleted_item = session.query(Item).filter_by(id=item_id).one()
 		session.delete(deleted_item)
 		session.commit()
+		flash("Item Deleted!")
 		return redirect(url_for('homepage'))
 
 	else:
@@ -78,6 +95,7 @@ def deleteItem(item_id):
 
 
 if __name__ == "__main__":
+	app.secret_key = 'dev key'
 	app.debug = True
 	app.run(host='0.0.0.0', port=8000)
 

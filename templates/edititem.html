@@ -8,24 +8,27 @@
         <div class="card-body">
         <h5 class="card-title">Edit Item</h5>
         <p class="card-text">
-            <form class=form-control>
+            <form class=form-control method='POST' action="{{url_for('editItem', item_id=edited_item.id)}}">
 
             Title: <br>
-            <input type=text  name='item_name'> <br>
+            <input type=text  class="form-control" name='item_name' placeholder="{{edited_item.name}}"><br>
 
             Description: <br>
-            <textarea rows=5  name='description'> </textarea> <br>
+            <textarea class="form-control" rows=5  name='item_description' >{{edited_item.description}} </textarea> <br>
+
 
             Category: <br>
-            <select class="form-control" id="category">
-            <option>1</option>
-            <option>2</option>
-            <option>3</option>
-            <option>4</option>
+            <select class="form-control" name='item_category' value ="{{edited_item.category.name}}" selected="{{edited_item.category.name}}">
+            <option>{{edited_item.category.name}}</option>
+            {% for category in category_list%}
+            {%if category.name != edited_item.category.name %}
+            <option>{{category.name}}</option>
+            {%endif%}
+            {%endfor%}
             </select>
             <br>
 
-            <input type=submit value='Add Product'> <br>
+            <input type=submit value='Edit Item'> <br>
 
 
             </form>
@@ -33,6 +36,6 @@
         </div>
         </div>
 </div>
-
+</div>
 
 {% endblock %}
