@@ -7,7 +7,7 @@
 
         <div class="card">
         <div class="card-body">
-        <h5 class="card-title">Categories</h5>
+        <h5 class="card-title"><a href="/">Categories</a></h5>
         <p class="card-text">
 
             {% for category in category_list %}
@@ -20,12 +20,15 @@
 
         <div class="card">
         <div class="card-body">
-        <h5 class="card-title">Category 1 items</h5>
+        <h5 class="card-title">{{selected_category.name}} Items </h5>
         <p class="card-text">
             {% for item in items %}
                 <a href="{{url_for('viewItem', category_id=selected_category.id, item_id=item.id)}}">{{item.name}}</a> <br>
             {% endfor %}
+            <br>
+            <a href="{{url_for('addItem')}}">Add a new item</a>
         </p>
+
         </div>
         </div>
 </div>

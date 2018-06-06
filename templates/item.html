@@ -10,7 +10,7 @@
             {{selected_item.description}}
             <br>
         <a href="{{url_for('editItem')}}">Edit</a>
-        <a href="{{url_for('deleteItem')}}">Delete</a>
+        <a href="{{url_for('deleteItem', item_id=selected_item.id)}}">Delete</a>
         </p>
         </div>
         </div>

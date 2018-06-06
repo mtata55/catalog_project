@@ -43,6 +43,7 @@ def viewItem(category_id, item_id):
 def addItem():
 	session = DBSession()
 	category_list = session.query(Category).all()
+
 	if request.method == 'POST':
 		if request.form['item_name']:
 			item_category = request.form['item_category']
@@ -60,9 +61,20 @@ def addItem():
 def editItem():
 	return render_template("edititem.html")
 
-@app.route('/deleteitem')
-def deleteItem():
-	return render_template("deleteitem.html")
+@app.route('/deleteitem/<int:item_id>', methods=['GET', 'POST'])
+def deleteItem(item_id):
+	session = DBSession()
+	selected_item = session.query(Item).filter_by(id=item_id).one()
+
+	if request.method == 'POST':
+		deleted_item = session.query(Item).filter_by(id=item_id).one()
+		session.delete(deleted_item)
+		session.commit()
+		return redirect(url_for('homepage'))
+
+	else:
+
+		return render_template("deleteitem.html", selected_item = selected_item )
 
 
 if __name__ == "__main__":

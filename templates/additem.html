@@ -11,14 +11,14 @@
             <form class=form-control method='POST' action="{{url_for('addItem')}}">
 
             Title: <br>
-            <input type=text  name='item_name'> <br>
+            <input type=text  class="form-control" name='item_name'> <br>
 
             Description: <br>
-            <textarea rows=5  name='item_description'> </textarea> <br>
+            <textarea class="form-control" rows=5  name='item_description'> </textarea> <br>
 
 
             Category: <br>
-            <select class="form-control" id="category" name='item_category'>
+            <select class="form-control" name='item_category'>
             {% for category in category_list%}
             <option>{{category.name}}</option>
             {%endfor%}
