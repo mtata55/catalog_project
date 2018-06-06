@@ -23,13 +23,11 @@
         <h5 class="card-title">Latest Items</h5>
         <p class="card-text">
         	<a href="{{url_for('addItem')}}">Add a new item</a><br>
-        	Product Dummy Text <br>
-        	Product dummy text <br>
-        	Product dummy text <br>
-        	Product dummy text <br>
-        	Product dummy text <br>
-        	Product dummy text <br>
-        	Product dummy text <br>
+        	{% for item in items %}
+
+            {{item.name}} <br>
+
+            {% endfor %}
         </p>
         </div>
         </div>

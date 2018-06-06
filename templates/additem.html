@@ -8,20 +8,20 @@
         <div class="card-body">
         <h5 class="card-title">Add Item</h5>
         <p class="card-text">
-            <form class=form-control>
+            <form class=form-control method='POST' action="{{url_for('addItem')}}">
 
             Title: <br>
             <input type=text  name='item_name'> <br>
 
             Description: <br>
-            <textarea rows=5  name='description'> </textarea> <br>
+            <textarea rows=5  name='item_description'> </textarea> <br>
+
 
             Category: <br>
-            <select class="form-control" id="category">
-            <option>1</option>
-            <option>2</option>
-            <option>3</option>
-            <option>4</option>
+            <select class="form-control" id="category" name='item_category'>
+            {% for category in category_list%}
+            <option>{{category.name}}</option>
+            {%endfor%}
             </select>
             <br>
 
