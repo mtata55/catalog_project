@@ -27,15 +27,15 @@ DBSession = sessionmaker(bind=engine)
 
 @app.route('/login')
 def showLogin():
-	state = ''.join(random.choice(string.ascii_uppercase + string.digits)
-		for x in xrange(32))
-	login_session['state'] = state
-	return render_template('login.html',STATE=state)
+    state = ''.join(random.choice(string.ascii_uppercase + string.digits)
+        for x in xrange(32))
+    login_session['state'] = state
+    return render_template('login.html',STATE=state)
 
 
 @app.route('/gconnect', methods=['POST'])
 def gconnect():
-	# Validate state token
+    # Validate state token
     if request.args.get('state') != login_session['state']:
         response = make_response(json.dumps('Invalid state parameter.'), 401)
         response.headers['Content-Type'] = 'application/json'
@@ -109,7 +109,7 @@ def gconnect():
     output += login_session['username']
     output += '!</h1>'
     flash("you are now logged in as %s" % login_session['username'])
-    print "done!"
+    #print "done!"
     return output
 
  # DISCONNECT - Revoke a current user's token and reset their login_session
@@ -135,6 +135,7 @@ def gdisconnect():
         del login_session['email']
         response = make_response(json.dumps('Successfully disconnected.'), 200)
         response.headers['Content-Type'] = 'application/json'
+        flash("You have been logged out!")
         return redirect(url_for('homepage'))
 
     else:
@@ -144,88 +145,133 @@ def gdisconnect():
 
 @app.route('/')
 def homepage():
-	session = DBSession()
-	category_list = session.query(Category).all()
-	items = session.query(Item).order_by(desc(Item.id)).limit(5).all()
-	return render_template("homepage.html", category_list = category_list, items=items, login_session=login_session)
+    session = DBSession()
+    category_list = session.query(Category).all()
+    items = session.query(Item).order_by(desc(Item.id)).limit(5).all()
+    return render_template("homepage.html", category_list = category_list, items=items, login_session=login_session)
 
 @app.route('/category/<int:category_id>')
 def viewCategory(category_id):
-	session = DBSession()
-	category_list = session.query(Category).all()
-	selected_category = session.query(Category).filter_by(id=category_id).one()
-	items = session.query(Item).filter_by(category_id=category_id).all()
+    session = DBSession()
+    category_list = session.query(Category).all()
+    selected_category = session.query(Category).filter_by(id=category_id).one()
+    items = session.query(Item).filter_by(category_id=category_id).all()
 
-	return render_template("category.html", category_list = category_list, selected_category=selected_category, items=items, login_session=login_session)
+    return render_template("category.html", category_list = category_list, selected_category=selected_category, items=items, login_session=login_session)
 
 @app.route('/category/<int:category_id>/item/<int:item_id>')
 def viewItem(category_id, item_id):
-	session = DBSession()
-	category_list = session.query(Category).all()
-	selected_category = session.query(Category).filter_by(id=category_id).one()
-	items = session.query(Item).filter_by(category_id=category_id).all()
-	selected_item = session.query(Item).filter_by(id=item_id).one()
+    session = DBSession()
+    category_list = session.query(Category).all()
+    selected_category = session.query(Category).filter_by(id=category_id).one()
+    items = session.query(Item).filter_by(category_id=category_id).all()
+    selected_item = session.query(Item).filter_by(id=item_id).one()
 
-	return render_template("item.html", category_list = category_list, selected_category=selected_category, items=items, selected_item=selected_item, login_session=login_session)
+    return render_template("item.html", category_list = category_list, selected_category=selected_category, items=items, selected_item=selected_item, login_session=login_session)
 
 @app.route('/additem', methods=['GET','POST'])
 def addItem():
-	session = DBSession()
-	category_list = session.query(Category).all()
+    session = DBSession()
+    category_list = session.query(Category).all()
 
-	if request.method == 'POST':
-		if request.form['item_name']:
-			item_category = request.form['item_category']
-			category_id = session.query(Category.id).filter_by(name=item_category).one()[0]
-			new_item = Item(name=request.form['item_name'],
-				description=request.form['item_description'],
-				category_id=category_id)
-			session.add(new_item)
-			session.commit()
-			flash("Item Added!")
-			return redirect(url_for('homepage'))
-	else:
-		return render_template("additem.html",category_list = category_list, login_session=login_session )
+    if 'username' not in login_session:
+        flash("You need to login to access this feature!")
+        return redirect('/login')
+
+    if request.method == 'POST':
+        if request.form['item_name']:
+            item_category = request.form['item_category']
+            category_id = session.query(Category.id).filter_by(name=item_category).one()[0]
+            new_item = Item(name=request.form['item_name'],
+                description=request.form['item_description'],
+                category_id=category_id, creator=login_session['email'])
+            session.add(new_item)
+            session.commit()
+            flash("Item Added!")
+            return redirect(url_for('homepage'))
+
+    else:
+        return render_template("additem.html",category_list = category_list, login_session=login_session )
 
 @app.route('/category/item/<int:item_id>/edit', methods=['GET','POST'])
 def editItem(item_id):
-	session = DBSession()
-	category_list = session.query(Category).all()
-	edited_item = session.query(Item).filter_by(id=item_id).one()
-	if request.method == 'POST':
-		item_category = request.form['item_category']
-		category_id = session.query(Category.id).filter_by(name=item_category).one()[0]
-		if request.form['item_name']:
-			edited_item.name = request.form['item_name']
-			edited_item.description = request.form['item_description']
-			edited_item.category_id = category_id
-			session.add(edited_item)
-			session.commit()
-			flash("Item Edited!")
-			return redirect(url_for('homepage'))
-	else:
-		return render_template("edititem.html", edited_item=edited_item, category_list=category_list, login_session=login_session)
+    session = DBSession()
+    category_list = session.query(Category).all()
+    edited_item = session.query(Item).filter_by(id=item_id).one()
+
+    if 'username' not in login_session:
+        flash("You need to login to access this feature!")
+        return redirect('/login')
+
+    if login_session['email'] != edited_item.creator:
+        flash("Sorry, only the creator of the item is allowed to edit it!!")
+        return redirect('/')
+
+    if request.method == 'POST':
+        item_category = request.form['item_category']
+        category_id = session.query(Category.id).filter_by(name=item_category).one()[0]
+        if request.form['item_name']:
+            edited_item.name = request.form['item_name']
+            edited_item.description = request.form['item_description']
+            edited_item.category_id = category_id
+            session.add(edited_item)
+            session.commit()
+            flash("Item Edited!")
+            return redirect(url_for('homepage'))
+    else:
+        return render_template("edititem.html", edited_item=edited_item, category_list=category_list, login_session=login_session)
 
 @app.route('/deleteitem/<int:item_id>', methods=['GET', 'POST'])
 def deleteItem(item_id):
-	session = DBSession()
-	selected_item = session.query(Item).filter_by(id=item_id).one()
+    session = DBSession()
+    selected_item = session.query(Item).filter_by(id=item_id).one()
 
-	if request.method == 'POST':
-		deleted_item = session.query(Item).filter_by(id=item_id).one()
-		session.delete(deleted_item)
-		session.commit()
-		flash("Item Deleted!")
-		return redirect(url_for('homepage'))
+    if 'username' not in login_session:
+        flash("You need to login to access this feature!")
+        return redirect('/login')
 
-	else:
+    if login_session['email'] != selected_item.creator:
+        flash("Sorry, only the creator of the item is allowed to delete it!!")
+        return redirect('/')
 
-		return render_template("deleteitem.html", selected_item = selected_item, login_session=login_session)
+    if request.method == 'POST':
+        deleted_item = session.query(Item).filter_by(id=item_id).one()
+        session.delete(deleted_item)
+        session.commit()
+        flash("Item Deleted!")
+        return redirect(url_for('homepage'))
+
+    else:
+
+        return render_template("deleteitem.html", selected_item = selected_item, login_session=login_session)
+
+@app.route('/JSON')
+def JSONCatalog():
+    session = DBSession()
+    items = session.query(Item).all()
+
+    return jsonify(json_list=[i.serialize for i in items])
+
+@app.route('/category/<int:category_id>/JSON')
+def JSONCategory(category_id):
+    session = DBSession()
+    category_list = session.query(Category).all()
+    selected_category = session.query(Category).filter_by(id=category_id).one()
+    items = session.query(Item).filter_by(category_id=category_id).all()
+
+    return jsonify(json_list=[i.serialize for i in items])
+
+@app.route('/item/<int:item_id>/JSON')
+def JSONItem(item_id):
+    session = DBSession()
+    selected_item = session.query(Item).filter_by(id=item_id).one()
+
+    return jsonify(json_list=(selected_item.serialize))
 
 
 if __name__ == "__main__":
-	app.secret_key = 'dev key'
-	app.debug = True
-	app.run(host='0.0.0.0', port=8000)
+    app.secret_key = 'dev key'
+    app.debug = True
+    app.run(host='0.0.0.0', port=8000)
 
 

@@ -10,17 +10,30 @@
 </head>
 
 
+<div class="content">
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+{% for message in messages %}
+  {{message}}
+{% endfor %}
+{% endif %}
+{% endwith %}
+</div>
+
+<br>
+
 <!-- GOOGLE PLUS SIGN IN BUTTON-->
 <div id="signinButton">
-	<span class="g-signin"
-	data-scope="openid email"
-	data-clientid="157246922086-er5fc1v5ce8hrp1mjeeje2esrim1cdgn.apps.googleusercontent.com"
-	data-redirecturi="postmessage"
-	data-accesstype="offline"
-	data-cookiepolicy="single_host_origin"
-	data-callback="signInCallback"
-	data-approvalprompt="force">
-	</span>
+  <p>Sign in Here !</p>
+  	<span class="g-signin"
+  	data-scope="openid email"
+  	data-clientid="157246922086-er5fc1v5ce8hrp1mjeeje2esrim1cdgn.apps.googleusercontent.com"
+  	data-redirecturi="postmessage"
+  	data-accesstype="offline"
+  	data-cookiepolicy="single_host_origin"
+  	data-callback="signInCallback"
+  	data-approvalprompt="force">
+  	</span>
 </div>
 <!--END GOOGLE PLUS SIGN IN BUTTON -->
 
@@ -47,7 +60,7 @@ function signInCallback(authResult) {
           $('#result').html('Login Successful!</br>'+ result + '</br>Redirecting...')
          setTimeout(function() {
           window.location.href = "/";
-         }, 2000);
+         }, 1000);
 
       } else if (authResult['error']) {
     console.log('There was an error: ' + authResult['error']);

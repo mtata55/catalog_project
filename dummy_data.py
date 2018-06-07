@@ -12,7 +12,7 @@ category1 = Category(name = "Soccer")
 session.add(category1)
 session.commit()
 
-item1 = Item(name = "Soccer Ball", description = "Original Nike Soccer Ball.", category = category1)
+item1 = Item(name = "Soccer Ball", description = "Original Nike Soccer Ball.", category = category1, creator='mtata@gmail.com')
 session.add(item1)
 session.commit()
 
@@ -21,7 +21,7 @@ category2 = Category(name = "Basketball")
 session.add(category2)
 session.commit()
 
-item2 = Item(name = "Basketball", description = "Original Nike Basketball.", category = category2)
+item2 = Item(name = "Basketball", description = "Original Nike Basketball.", category = category2, creator='mtata@gmail.com')
 session.add(item2)
 session.commit()
 
