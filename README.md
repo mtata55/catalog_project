@@ -70,6 +70,7 @@ Clone the repository or unzip the folder contents on to the /vagrant folder your
 
 ## Acknowledgements
 Udacity
+
 Authentication flow code from [Udacity Project](https://github.com/udacity/ud330/blob/master/Lesson2/step5/project.py)
 
 
