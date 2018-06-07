@@ -1,5 +1,10 @@
-from flask import (Flask, render_template,
-request, redirect, url_for, flash, jsonify)
+from flask import (Flask,
+                    render_template,
+                    request,
+                    redirect,
+                    url_for,
+                    flash,
+                    jsonify)
 
 from sqlalchemy import create_engine, desc
 from sqlalchemy.orm import sessionmaker
@@ -164,6 +169,15 @@ def homepage():
 
 @app.route('/category/<int:category_id>')
 def viewCategory(category_id):
+    """
+    View category information
+    :params
+    category_id: An integer identifying the category (primary key) in the database
+
+    :return
+    Category data page
+
+    """
     session = DBSession()
     category_list = session.query(Category).all()
     selected_category = session.query(Category).filter_by(id=category_id).one()
@@ -178,6 +192,16 @@ def viewCategory(category_id):
 
 @app.route('/category/<int:category_id>/item/<int:item_id>')
 def viewItem(category_id, item_id):
+    """
+    View item information
+    :params
+    category_id: An integer identifying the category (primary key) in the database
+    item_id: An integer identifying the item (primary key) in the database
+
+    :return
+    Item data page
+
+    """
     session = DBSession()
     category_list = session.query(Category).all()
     selected_category = session.query(Category).filter_by(id=category_id).one()
@@ -194,12 +218,21 @@ def viewItem(category_id, item_id):
 
 @app.route('/additem', methods=['GET', 'POST'])
 def addItem():
-    session = DBSession()
-    category_list = session.query(Category).all()
+    """
+    Add new item to database
 
+    :return
+    Login page (User not signed in)
+    Add Item Page (GET request)
+    Add item in database and redirect to homepage (POST request)
+
+    """
     if 'username' not in login_session:
         flash("You need to login to access this feature!")
         return redirect('/login')
+
+    session = DBSession()
+    category_list = session.query(Category).all()
 
     if request.method == 'POST':
         if request.form['item_name']:
@@ -223,17 +256,35 @@ def addItem():
 
 @app.route('/category/item/<int:item_id>/edit', methods=['GET', 'POST'])
 def editItem(item_id):
-    session = DBSession()
-    category_list = session.query(Category).all()
-    edited_item = session.query(Item).filter_by(id=item_id).one()
+    """
+    Edit item in database
+    :params
+    item_id: An integer identifying the item (primary key) in the database
+
+
+    :return
+    Login page (User not signed in)
+    Home page with error (User not creator of item)
+    Edit Item Page (GET request)
+    Edit item in database and redirect to homepage (POST request with user == creator)
+    """
+
 
     if 'username' not in login_session:
         flash("You need to login to access this feature!")
         return redirect('/login')
 
+    session = DBSession()
+    edited_item = session.query(Item).filter_by(id=item_id).one()
+    category_list = session.query(Category).all()
+
+
     if login_session['email'] != edited_item.creator:
         flash("Sorry, only the creator of the item is allowed to edit it!!")
         return redirect('/')
+
+
+
 
     if request.method == 'POST':
         item_category = request.form['item_category']
@@ -257,16 +308,31 @@ def editItem(item_id):
 
 @app.route('/deleteitem/<int:item_id>', methods=['GET', 'POST'])
 def deleteItem(item_id):
-    session = DBSession()
-    selected_item = session.query(Item).filter_by(id=item_id).one()
+    """
+    Delete item in database
+    :params
+    item_id: An integer identifying the item (primary key) in the database
+
+
+    :return
+    Login page (User not signed in)
+    Home page with error (User not creator of item)
+    Delete Item Page (GET request)
+    Delete item in database and redirect to homepage (POST request with user == creator)
+    """
 
     if 'username' not in login_session:
         flash("You need to login to access this feature!")
         return redirect('/login')
 
+    session = DBSession()
+    selected_item = session.query(Item).filter_by(id=item_id).one()
+
     if login_session['email'] != selected_item.creator:
         flash("Sorry, only the creator of the item is allowed to delete it!!")
         return redirect('/')
+
+
 
     if request.method == 'POST':
         deleted_item = session.query(Item).filter_by(id=item_id).one()
@@ -292,6 +358,15 @@ def JSONCatalog():
 
 @app.route('/category/<int:category_id>/JSON')
 def JSONCategory(category_id):
+    """
+    JSON endpoint for category
+    :params
+    category_id: An integer identifying the category (primary key) in the database
+
+
+    :return
+    JSON output
+    """
     session = DBSession()
     category_list = session.query(Category).all()
     selected_category = session.query(Category).filter_by(id=category_id).one()
@@ -302,6 +377,15 @@ def JSONCategory(category_id):
 
 @app.route('/item/<int:item_id>/JSON')
 def JSONItem(item_id):
+    """
+    JSON endpoint for category
+    :params
+    item_id: An integer identifying the item (primary key) in the database
+
+
+    :return
+    JSON output
+    """
     session = DBSession()
     selected_item = session.query(Item).filter_by(id=item_id).one()
 

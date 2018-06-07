@@ -11,7 +11,7 @@
             <form class=form-control method='POST' action="{{url_for('editItem', item_id=edited_item.id)}}">
 
             Title: <br>
-            <input type=text  class="form-control" name='item_name' placeholder="{{edited_item.name}}"><br>
+            <input type=text  class="form-control" name='item_name' value="{{edited_item.name}}"><br>
 
             Description: <br>
             <textarea class="form-control" rows=5  name='item_description' >{{edited_item.description}} </textarea> <br>
